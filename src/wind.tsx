@@ -1,77 +1,57 @@
-import * as React from "react";
+import { createElement, DetailedHTMLProps, HTMLAttributes } from "react";
+import { isNil, collect } from "./utils";
 
-import { createElement, HTMLAttributes, DetailedHTMLProps } from "react";
-
-type Elements = HTMLElementTagNameMap;
-type Config = { [key: string]: { [key: string]: string } };
-type Props<T extends Config> = { [key in keyof T]: keyof T[key] };
 type Token = string;
+type Config = Record<string, Record<string, Token>>;
+type StyleProps<Config> = { [K in keyof Config]: keyof Config[K] };
 
-interface WindComponent<K extends keyof Elements> {
-  <T extends Config>(
-    props: DetailedHTMLProps<HTMLAttributes<Elements[K]>, Elements[K]> &
-      Partial<Props<T>>
-  ): JSX.Element;
-  computedClasses: string;
-}
+type ComponentProps<T extends keyof HTMLElementTagNameMap> = DetailedHTMLProps<
+  HTMLAttributes<HTMLElementTagNameMap[T]>,
+  HTMLElementTagNameMap[T]
+>;
 
-interface WindComponentFactory<K extends keyof Elements, R extends Config> {
-  <T extends Config>(
-    input: (T & R) | Token,
+interface Wind {
+  div: <T extends Config>(
+    config?: T | Token,
     ...tokens: Token[]
-  ): WindComponent<K>;
+  ) => (props: ComponentProps<"div"> & Partial<StyleProps<T>>) => JSX.Element;
 }
 
-type Wind<T extends Config = {}> = {
-  [K in keyof Elements]: WindComponentFactory<K, T>;
-} & {
-  extend: <K extends keyof Elements>(
-    component: WindComponent<K>
-  ) => Omit<Wind<T>, "extend">;
+const createWind = (): Wind => {
+  return {
+    div: (config = "", ...tokens) => {
+      const hasConfig = typeof config !== "string";
+      const configKeys = hasConfig ? Object.keys(config ?? {}) : [];
+
+      return (props) => {
+        const [styleProps, componentProps] = collect(
+          props,
+          hasConfig ? configKeys : []
+        );
+
+        const styleTokens = hasConfig
+          ? Object.entries(config).map(([key, item]) => {
+              return styleProps[key]
+                ? item[styleProps[key]]
+                : Object.values(item)[0];
+            })
+          : [config];
+
+        const classNames = [...styleTokens, ...tokens]
+          .filter((item) => item !== " ")
+          .join(" ");
+
+        const cn = [componentProps.className, classNames]
+          .filter((item) => !isNil(item))
+          .join(" ");
+
+        return createElement("div", {
+          ...componentProps,
+          ...(cn.length ? { className: cn } : {}),
+        });
+      };
+    },
+  };
 };
 
-export const wind: Wind = new Proxy(Object.create({}), {
-  get: function (_, tagName: string, __) {
-    return create(tagName as any);
-  },
-});
-
-wind.extend = (() => {}) as any;
-
-function create<T extends keyof Elements>(tagName: T) {
-  return function <K extends Config>(input: K | Token, ...tokens: Token[]) {
-    console.log(input, tokens, tagName);
-    const computedClasses: string[] = [...tokens];
-    return (props: Elements[T] & Partial<Props<K>>) => {
-      return createElement(tagName, {
-        ...props,
-        className: [props.className, ...computedClasses].join(" "),
-      });
-    };
-  };
-}
-
-const Button = wind.button(
-  {
-    variant: {
-      primary: "",
-      secondary: "",
-    },
-  },
-  "bg-gray-100"
-);
-
-export const Stack = wind.div("flex flex-col");
-
-export const Rows = wind.div("flex");
-
-const Input = wind.input({ value: { foo: "" } }, "bg-gray-100");
-
-export const BetterInput = wind.extend(Button);
-
-export const Test = () => (
-  <>
-    <Button variant="secondary" />
-    <Input />
-  </>
-);
+export const wind = createWind();
