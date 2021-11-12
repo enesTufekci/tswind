@@ -37,17 +37,13 @@ const createWind = (): Wind => {
             })
           : [config];
 
-        const classNames = [...styleTokens, ...tokens]
-          .filter((item) => item !== " ")
-          .join(" ");
-
-        const cn = [componentProps.className, classNames]
+        const classNames = [componentProps.className, ...styleTokens, ...tokens]
           .filter((item) => !isNil(item))
           .join(" ");
 
         return createElement("div", {
           ...componentProps,
-          ...(cn.length ? { className: cn } : {}),
+          ...(classNames.length ? { className: classNames } : {}),
         });
       };
     },
