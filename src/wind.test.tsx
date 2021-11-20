@@ -51,4 +51,39 @@ describe("wind", () => {
       `<div class="flex-col bg-gray-100 m-2">Hello</div>`
     );
   });
+
+  it("extends", () => {
+    const ButtonBase = wind.button(
+      { variant: { primary: "primary", secondary: "secondary" } },
+      "foo bar"
+    );
+
+    const Button = wind
+      .extend(ButtonBase)
+      .button({ theme: { dark: "dark", light: "light" } }, "baz");
+
+    const { container: button } = render(
+      <Button variant="secondary" theme="dark" />
+    );
+    expect(button.innerHTML).toEqual(
+      `<button class="secondary dark baz foo bar"></button>`
+    );
+  });
+
+  it("forwards ref", () => {
+    const Input = wind.input({});
+
+    const Component = () => {
+      const [value, setValue] = React.useState("");
+
+      const ref = React.createRef<HTMLInputElement>();
+      const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target;
+        setValue(value);
+      };
+      return <Input onChange={handleChange} value={value} ref={ref}></Input>;
+    };
+
+    const {} = render(<Component />);
+  });
 });
