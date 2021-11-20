@@ -1,6 +1,6 @@
 # tswind
 
-Wind is a small utility library to make working with React and Tailwindcss easier and more maintainable.
+tswind is a styling library for [React](https://reactjs.org) with CSS-in-JS like api, powered by [tailwindcss](https://tailwindcss.com/).
 
 ## Motivation
 

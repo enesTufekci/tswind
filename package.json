@@ -1,7 +1,7 @@
 {
   "name": "tswind",
   "version": "0.1.0",
-  "description": "",
+  "description": "Styling library for React with CSS-in-JS like api, powered by tailwindcss",
   "main": "dist/main.js",
   "source": "src/index.ts",
   "module": "dist/module.js",
@@ -12,9 +12,12 @@
     "test": "jest"
   },
   "keywords": [
-    "tailwindcss typescript css-in-js"
+    "tailwindcss",
+    "react",
+    "css-in-js",
+    "typescript"
   ],
-  "author": "enesTufekci",
+  "author": "enesTufekci<enesxtufekci@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@parcel/packager-ts": "^2.0.1",
