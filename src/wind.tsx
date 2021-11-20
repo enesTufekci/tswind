@@ -1,45 +1,27 @@
-import {
-  createElement,
-  DetailedHTMLProps,
-  ForwardedRef,
-  forwardRef,
-  HTMLAttributes,
-  ReactElement,
-  RefAttributes,
-} from "react";
+import { createElement, ForwardedRef, forwardRef, ReactElement } from "react";
 import { isNil, collect } from "./utils";
 
 type Token = string;
 type Config = Record<string, Record<string, Token>>;
 type StyleProps<Config> = { [K in keyof Config]: keyof Config[K] };
+type Elements = keyof JSX.IntrinsicElements;
 
-type ComponentProps<T extends keyof HTMLElementTagNameMap> = DetailedHTMLProps<
-  HTMLAttributes<HTMLElementTagNameMap[T]>,
-  HTMLElementTagNameMap[T]
->;
-
-interface WindComponent<
-  T extends Config,
-  K extends keyof HTMLElementTagNameMap
-> {
-  (props: Partial<StyleProps<T>>): ReactElement;
+interface WindComponent<T extends Config, K extends Elements> {
+  (props: JSX.IntrinsicElements[K] & Partial<StyleProps<T>>): ReactElement;
 }
 
 type Wind<T0 extends Config = {}> = {
-  [K in keyof HTMLElementTagNameMap]: <T extends Config>(
+  [K in Elements]: <T extends Config>(
     config?: T | Token,
     ...tokens: Token[]
   ) => WindComponent<T & T0, K>;
 } & {
-  extend: <T extends Config, K extends keyof HTMLElementTagNameMap>(
+  extend: <T extends Config, K extends Elements>(
     Component: WindComponent<T, K>
   ) => Wind<T>;
 };
 
-function createWindComponent<
-  TagName extends keyof HTMLElementTagNameMap,
-  T extends Config
->(
+function createWindComponent<TagName extends Elements, T extends Config>(
   tagName: TagName,
   config?: T | Token,
   ...tokens: Token[]
@@ -48,7 +30,7 @@ function createWindComponent<
   const configKeys = hasConfig ? Object.keys(config ?? {}) : [];
 
   const Component = (
-    props: ComponentProps<TagName> & Partial<StyleProps<T>>,
+    props: JSX.IntrinsicElements[TagName] & Partial<StyleProps<T>>,
     ref: ForwardedRef<TagName>
   ) => {
     const [styleProps, componentProps] = collect(
@@ -80,21 +62,18 @@ function createWindComponent<
   (_Component as any).windTokens = hasConfig ? tokens : [...tokens, config];
   _Component.displayName = `Wind${tagName}`;
 
-  return _Component as WindComponent<T, TagName>;
+  return _Component as any as WindComponent<T, TagName>;
 }
 
-export const createWind = <
-  T extends Config = {},
-  K0 extends keyof HTMLElementTagNameMap = "div"
->(
+export const createWind = <T extends Config = {}, K0 extends Elements = "div">(
   Component?: WindComponent<T, K0>
 ): Wind<T> => {
   return new Proxy(
     {},
     {
-      get: (_, prop: keyof HTMLElementTagNameMap | "extend", __) => {
+      get: (_, prop: Elements | "extend", __) => {
         if (prop === "extend") {
-          return <T extends Config, K extends keyof HTMLElementTagNameMap>(
+          return <T extends Config, K extends Elements>(
             Component: WindComponent<T, K>
           ) => createWind(Component);
         }

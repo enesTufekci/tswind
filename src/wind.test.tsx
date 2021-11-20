@@ -1,5 +1,5 @@
 import * as React from "react";
-import { render } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 import { wind } from "./wind";
 
@@ -58,20 +58,21 @@ describe("wind", () => {
       "foo bar"
     );
 
-    const Button = wind
+    const Link = wind
       .extend(ButtonBase)
-      .button({ theme: { dark: "dark", light: "light" } }, "baz");
+      .a({ theme: { dark: "dark", light: "light" } }, "baz");
 
     const { container: button } = render(
-      <Button variant="secondary" theme="dark" />
+      <Link variant="secondary" theme="dark" />
     );
     expect(button.innerHTML).toEqual(
-      `<button class="secondary dark baz foo bar"></button>`
+      `<a class="secondary dark baz foo bar"></a>`
     );
   });
 
-  it("forwards ref", () => {
+  it("forwards ref", async () => {
     const Input = wind.input({});
+    const fn = jest.fn();
 
     const Component = () => {
       const [value, setValue] = React.useState("");
@@ -79,11 +80,28 @@ describe("wind", () => {
       const ref = React.createRef<HTMLInputElement>();
       const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
+        fn(ref.current?.value);
         setValue(value);
       };
-      return <Input onChange={handleChange} value={value} ref={ref}></Input>;
+      return (
+        <Input
+          onChange={handleChange}
+          value={value}
+          ref={ref}
+          data-testid="input"
+        ></Input>
+      );
     };
 
-    const {} = render(<Component />);
+    render(<Component />);
+
+    const input = await screen.findByTestId("input");
+    expect(input).toBeTruthy();
+    fireEvent.change(input, {
+      target: {
+        value: "hello",
+      },
+    });
+    expect(fn).toHaveBeenNthCalledWith(1, "hello");
   });
 });
