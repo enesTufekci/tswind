@@ -7,7 +7,9 @@ type StyleProps<Config> = { [K in keyof Config]: keyof Config[K] };
 type Elements = keyof JSX.IntrinsicElements;
 
 interface WindComponent<T extends Config, K extends Elements> {
-  (props: JSX.IntrinsicElements[K] & Partial<StyleProps<T>>): ReactElement;
+  (
+    props: JSX.IntrinsicElements[K] & Partial<StyleProps<T>> & { as?: Elements }
+  ): ReactElement;
 }
 
 type Wind<T0 extends Config = {}> = {
@@ -27,10 +29,14 @@ function createWindComponent<TagName extends Elements, T extends Config>(
   ...tokens: Token[]
 ): WindComponent<T, TagName> {
   const hasConfig = typeof config !== "string";
-  const configKeys = hasConfig ? Object.keys(config ?? {}) : [];
+  const configKeys = hasConfig ? Object.keys(config || {}) : [];
 
   const Component = (
-    props: JSX.IntrinsicElements[TagName] & Partial<StyleProps<T>>,
+    {
+      as = tagName,
+      ...props
+    }: JSX.IntrinsicElements[TagName] &
+      Partial<StyleProps<T>> & { as?: Elements },
     ref: ForwardedRef<TagName>
   ) => {
     const [styleProps, componentProps] = collect(
@@ -39,7 +45,7 @@ function createWindComponent<TagName extends Elements, T extends Config>(
     );
 
     const styleTokens = hasConfig
-      ? Object.entries(config ?? {}).map(([key, item]) => {
+      ? Object.entries(config || {}).map(([key, item]) => {
           return styleProps[key]
             ? item[styleProps[key]]
             : Object.values(item)[0];
@@ -50,7 +56,7 @@ function createWindComponent<TagName extends Elements, T extends Config>(
       .filter((item) => !isNil(item))
       .join(" ");
 
-    return createElement(tagName, {
+    return createElement(as, {
       ref,
       ...componentProps,
       ...(classNames.length ? { className: classNames } : {}),

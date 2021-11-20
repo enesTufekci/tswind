@@ -52,6 +52,24 @@ describe("wind", () => {
     );
   });
 
+  it("with flags", () => {
+    const Button = wind.button(
+      {
+        variant: { primary: "bg-red-300", secondary: "bg-indigo-300" },
+      },
+      "px-4 py-2"
+    );
+    const { container: primary } = render(<Button />);
+    expect(primary.innerHTML).toEqual(
+      '<button class="bg-red-300 px-4 py-2"></button>'
+    );
+
+    const { container: secondary } = render(<Button variant="secondary" />);
+    expect(secondary.innerHTML).toEqual(
+      '<button class="bg-indigo-300 px-4 py-2"></button>'
+    );
+  });
+
   it("extends", () => {
     const ButtonBase = wind.button(
       { variant: { primary: "primary", secondary: "secondary" } },
@@ -103,5 +121,10 @@ describe("wind", () => {
       },
     });
     expect(fn).toHaveBeenNthCalledWith(1, "hello");
+  });
+  it("as", () => {
+    const Button = wind.button({});
+    const { container: a } = render(<Button as="a">Link</Button>);
+    expect(a.innerHTML).toEqual("<a>Link</a>");
   });
 });
