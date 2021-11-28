@@ -128,3 +128,62 @@ const Button = wind.button(
 ```tsx
 const LinkButton = wind.extend(Button).a("text-semibold");
 ```
+
+### Using Theme
+
+```tsx
+const wind = createWind({
+  color: {
+    text: "text-gray-800",
+    textDark: "text-gray-900",
+  },
+  bgColor: {
+    primary: "bg-indigo-700",
+    secodary: "bg-green-700",
+  },
+});
+
+const Button = wind.button({
+  variant: {
+    primary: [$.color.white, $.bgColor.primary],
+    secondary: "$bgColor.secondary $color.textDark",
+  },
+});
+```
+
+### Extending the theme
+
+```tsx
+const {
+  ThemeProvider,
+  useTheme,
+  theme: $,
+} = wind.createTheme({
+  dark: {
+    color: {
+      text: "text-gray-100",
+      textDark: "text-gray-400",
+    },
+    bgColor: {
+      primary: "bg-green-300",
+      secondary: "bg-indigo-300",
+    },
+  },
+});
+
+const App = () => {
+  const { preferDarkMode } = useDeviceSettings();
+  const [theme, setTheme] = useTheme(preferDarkMode ? "dark" : "default");
+  return (
+    <ThemeProvider theme={theme}>
+      <Button
+        onClick={() =>
+          setTheme((theme) => (theme === "dark" ? "default" : "dark"))
+        }
+      >
+        Toggle Theme
+      </Button>
+    </ThemeProvider>
+  );
+};
+```
