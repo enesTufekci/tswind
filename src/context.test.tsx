@@ -3,31 +3,31 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { createTheme } from "./context";
 import { styled } from "./styled";
 
+const { theme, ThemeProvider, useTheme } = createTheme({
+  light: {
+    color: {
+      primary: "light.color.primary",
+      secondary: "light.color.secondary",
+    },
+    bg: {
+      primary: "light.bg.primary",
+      secondary: "light.bg.secondary",
+    },
+  },
+  dark: {
+    color: {
+      primary: "dark.color.primary",
+      secondary: "dark.color.secondary",
+    },
+    bg: {
+      primary: "dark.bg.primary",
+      secondary: "dark.bg.secondary",
+    },
+  },
+});
+
 describe("context and theme", () => {
   test("#1", async () => {
-    const { theme, ThemeProvider, useTheme } = createTheme({
-      light: {
-        color: {
-          primary: "light.color.primary",
-          secondary: "light.color.secondary",
-        },
-        bg: {
-          primary: "light.bg.primary",
-          secondary: "light.bg.secondary",
-        },
-      },
-      dark: {
-        color: {
-          primary: "dark.color.primary",
-          secondary: "dark.color.secondary",
-        },
-        bg: {
-          primary: "dark.bg.primary",
-          secondary: "dark.bg.secondary",
-        },
-      },
-    });
-
     const Button = styled.button({
       variant: {
         primary: [theme.color.primary, theme.bg.primary],

@@ -1,5 +1,6 @@
-import { generateClassNames } from "./generateClassNames";
 import { createElement, ForwardedRef, forwardRef, useContext } from "react";
+
+import { generateClassNames } from "./generateClassNames";
 import { Elements, Flags, Token } from "./types";
 import { Context } from "./context";
 

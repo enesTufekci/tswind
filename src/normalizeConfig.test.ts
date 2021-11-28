@@ -21,7 +21,7 @@ describe("normalizeConfig", () => {
     });
   });
 
-  test("with tokens and flags", () => {
+  test("custom", () => {
     const config = {
       _flags: ["bg-red-100"],
       __flags: { direction: { row: "row", col: "col" } },

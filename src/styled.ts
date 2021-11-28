@@ -16,7 +16,7 @@ export type Styled<T extends Flags> = {
 export function createStyled<T extends Flags>(
   __flags: T,
   ...__tokens: Token[]
-): Styled<T> {
+) {
   return new Proxy({} as Styled<T>, {
     get: (_, element: Elements) => {
       return (_flags: Flags, ..._tokens: Token[]) => {
