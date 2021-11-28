@@ -18,7 +18,7 @@ describe("styled", () => {
   test("single array of tokens", () => {
     const Div = styled.div(["flex", "col"]);
     const { container } = render(<Div />);
-    expect(container.innerHTML).toEqual('<div class="flex col"></div>');
+    expect(container.innerHTML).toEqual('<div class="col flex"></div>');
   });
 
   test("single array of tokens and tokens", () => {
@@ -28,7 +28,7 @@ describe("styled", () => {
     ]);
     const { container } = render(<Div />);
     expect(container.innerHTML).toEqual(
-      '<div class="flex col bg-red p-2 border-2 border-red"></div>'
+      '<div class="border-red border-2 p-2 bg-red col flex"></div>'
     );
   });
 

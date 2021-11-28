@@ -18,13 +18,13 @@ describe("extend", () => {
   test("2 level", () => {
     const { container } = render(<Wrapper direction="col" />);
     expect(container.innerHTML).toEqual(
-      '<div class="bg-gray-100 flex col"></div>'
+      '<div class="flex bg-gray-100 col"></div>'
     );
   });
   test("3 level", () => {
     const { container } = render(<Wrapper2 direction="col" />);
     expect(container.innerHTML).toEqual(
-      '<div class="bg-gray-100 bg-red-100 flex col"></div>'
+      '<div class="bg-gray-100 flex bg-red-100 col"></div>'
     );
   });
 });
