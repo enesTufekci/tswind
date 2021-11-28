@@ -1,1 +1,2 @@
-export { wind } from "./wind";
+export { styled } from "./styled";
+export { createTheme } from "./context";
