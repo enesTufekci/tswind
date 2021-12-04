@@ -20,9 +20,12 @@
   },
   "devDependencies": {
     "@types/react": "17.0.34",
+    "autoprefixer": "^10.4.0",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.3",
+    "postcss": "^8.4.4",
     "relative-deps": "^1.0.7",
+    "tailwindcss": "^2.2.19",
     "typescript": "4.4.4"
   }
 }

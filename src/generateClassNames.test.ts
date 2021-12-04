@@ -47,6 +47,6 @@ describe("generateClassNames", () => {
         tokens: [color.primary, "flex"],
         themeTokenProcessor: processor,
       })
-    ).toEqual("text-indigo-600 bg-blue-600 text-orange-600 flex");
+    ).toEqual("text-orange-600 flex text-indigo-600 bg-blue-600");
   });
 });

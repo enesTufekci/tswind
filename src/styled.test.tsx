@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { styled } from "./styled";
 import { screen, render, fireEvent } from "@testing-library/react";
 
@@ -94,7 +94,7 @@ describe("styled", () => {
   });
 
   test("ref", async () => {
-    const Input = styled.input();
+    const Input = styled.input().withRef("Input");
 
     const fn = jest.fn();
     const Component = () => {

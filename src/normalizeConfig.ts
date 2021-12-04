@@ -1,5 +1,9 @@
 import { Flags, Token } from "./types";
 
+/*
+ * @description: styled api accepts the tokens in various kinds of ways (see items parameter)
+ * We abstract the complexity of normalizing them in this function
+ */
 export function normalizeConfig(
   ...items: (Token | Token[] | Flags | undefined)[]
 ) {

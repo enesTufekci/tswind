@@ -1,15 +1,14 @@
-import React, { useContext } from "react";
-import { createContext, useCallback, useState } from "react";
+import React, { useContext, createContext, useCallback, useState } from "react";
 import { Theme, ThemeToken } from "./types";
 
 type SetTheme<T> = (fn: ((theme: T) => T) | T) => void;
 
-type TX<T, Cache extends any = null> = T extends PropertyKey
+type ThemeTokens<T, Cache extends any = null> = T extends PropertyKey
   ? Cache
   : {
       [P in keyof T]: P extends string
         ? Cache extends null
-          ? TX<T[P], Record<P, () => string>>
+          ? ThemeTokens<T[P], Record<P, () => string>>
           : never // (t:T) => is the actual type, but keep never to not expose theme vars to user
         : never;
     };
@@ -21,7 +20,7 @@ interface ContextValue {
   themeName: string;
 }
 
-export const Context = createContext<ContextValue>({} as any);
+export const ThemeContext = createContext<ContextValue>({} as any);
 
 interface ThemeProviderProps<T> {
   children: React.ReactNode;
@@ -45,7 +44,7 @@ export function createTheme<T extends Record<string, Theme>, K extends keyof T>(
       [themeName]
     );
     return (
-      <Context.Provider
+      <ThemeContext.Provider
         value={{
           processor,
           theme: themes[themeName],
@@ -54,12 +53,12 @@ export function createTheme<T extends Record<string, Theme>, K extends keyof T>(
         }}
       >
         {children}
-      </Context.Provider>
+      </ThemeContext.Provider>
     );
   }
 
   function useTheme(): { themeName: K; setTheme: SetTheme<K> } {
-    const { themeName, setTheme } = useContext(Context);
+    const { themeName, setTheme } = useContext(ThemeContext);
 
     return {
       themeName: themeName as K,
@@ -80,7 +79,7 @@ export function createTheme<T extends Record<string, Theme>, K extends keyof T>(
       };
     },
     {}
-  ) as TX<T[K]>;
+  ) as ThemeTokens<T[K]>;
   return {
     useTheme,
     ThemeProvider,

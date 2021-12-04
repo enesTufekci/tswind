@@ -4,70 +4,13 @@ tswind is a styling library for [React](https://reactjs.org) with CSS-in-JS like
 
 ## Motivation
 
-This looks alright.
+Tailwindcss allows you to write more css rules with as less as possible amount of meaningful key strokes. E.g typing 3 characters long `p-2` yields to same result with typing 14 characters long `padding: 2rem;`. If creating UI components is a part of our daily job, it becomes exponentially more efficient when we need to do this hundred of times in daily basis.
 
-```tsx
-const Button = ({ children, ...buttonProps }) => (
-  <button
-    className="bg-red-100 font-bold tracking-wide px-8 py-4 text-sm"
-    {...buttonProps}
-  >
-    {children}
-  </button>
-);
-```
-
-What about this?
-
-```tsx
-const Button = ({ children, variant, ...buttonProps }) => (
-  <button
-    className={`${
-      variant === "primary"
-        ? "bg-red-100"
-        : "bg-transparent border-2 border-red-100"
-    } font-bold tracking-wide px-8 py-4 text-sm`}
-    {...buttonProps}
-  >
-    {children}
-  </button>
-);
-```
-
-What about this?!
-
-```tsx
-const Button = ({ children, variant, ...buttonProps }) => (
-  <button
-    className={`${
-      variant === "primary"
-        ? "bg-red-100"
-        : "bg-transparent border-2 border-red-100"
-    } ${
-      size === "large" ? "py-8" : "py-4  text-sm"
-    } font-bold tracking-wide px-8 `}
-    {...buttonProps}
-  >
-    {children}
-  </button>
-);
-```
-
-- React and tailwindcss are amazing tools to build UIs but it is not an easy task to keep components clean, readable and maintainable in a growing project.
-
-- It is not a hard task to put class names together, infact there are a lot of ways to achive such simple task. But using different techniques to create class names for components can lead to inconsistency and refactoring problems.
-
-- tailwindcss provides built-in directives to help code organisation but they only work in `.css` files. Even though this is a very good approach, it negates the advantage of having logic, markup and styling in a single file.
-
-- There are really good CSS-in-JS like libraries use tailwindcss under the hood but they add another tool to the existing tool chain. (Not all of them)
-
-- tswind aims for clean and maintainable code with simple API without compromising on tailwindcss' rapid styling pace.
-
-- Components created with tswind have typescript support, it infers the prop types from variations. In the following example `variant` and `size` props will be typed as `'primary' | 'secondary'` amd `'normal' | 'large'` respectively.
+But not everything is for free. Having a lot of class names inside your jsx, makes it harder to focus on logic part of your component. Especially if the appeareance of an element changes based on internal state which is the case most of the time. $
 
 ## Example
 
-```tsx
+```javascript
 import { wind } from "tswind";
 
 const Button = wind.button(
