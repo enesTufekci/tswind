@@ -9,6 +9,7 @@
   "scripts": {
     "watch": "parcel watch",
     "build": "parcel build",
+    "prepare": "np, run build",
     "test": "jest"
   },
   "keywords": [

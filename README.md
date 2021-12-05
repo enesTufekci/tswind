@@ -10,7 +10,7 @@ But not everything is for free. Having a lot of class names inside your jsx, mak
 
 ## Example
 
-```javascript
+```typescript
 import { wind } from "tswind";
 
 const Button = wind.button(
@@ -53,13 +53,13 @@ Tailwindcss has to be set up in the project. Please follow [this](https://tailwi
 
 ### Basic component
 
-```tsx
+```typescript
 const Button = wind.button("bg-indigo-700 rounded-md shadow-md text-white");
 ```
 
 ### Component with flags
 
-```tsx
+```typescript
 const Button = wind.button(
   { variants: { primary: "bg-red-100", secondary: "bg-green-100" } },
   "px-4 py-2"
@@ -68,13 +68,13 @@ const Button = wind.button(
 
 ### Extending Components
 
-```tsx
+```typescript
 const LinkButton = wind.extend(Button).a("text-semibold");
 ```
 
 ### Using Theme
 
-```tsx
+```typescript
 const wind = createWind({
   color: {
     text: "text-gray-800",
@@ -96,7 +96,7 @@ const Button = wind.button({
 
 ### Extending the theme
 
-```tsx
+```typescript
 const {
   ThemeProvider,
   useTheme,
