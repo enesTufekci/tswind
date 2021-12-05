@@ -1,6 +1,6 @@
 {
   "name": "tswind",
-  "version": "1.0.0-alpha-1",
+  "version": "1.0.0-alpha-1.0",
   "description": "Styling library for React with CSS-in-JS like api, powered by tailwindcss",
   "main": "dist/main.js",
   "source": "src/index.ts",
